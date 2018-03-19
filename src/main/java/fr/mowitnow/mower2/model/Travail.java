@@ -3,8 +3,9 @@ package fr.mowitnow.mower2.model;
 import java.util.List;
 
 // TODO: make in Singleton
-public class Jeu {
-    private Gazon gazon; // Singleton => Il n'y a qu'un gazon par jeu
+// TODO: utiliser Log4j
+public class Travail {
+    private Gazon gazon; // Singleton => Il n'y a qu'un gazon par travail
     private List<Tondeuse> tondeuses;
 
     public void lancer(String entrees) {
@@ -21,8 +22,8 @@ public class Jeu {
     }
 
     private void roulerTondeuses() throws BusinessException {
-
         // TODO détection collision?
+
 
     }
 

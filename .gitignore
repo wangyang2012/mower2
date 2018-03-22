@@ -1,2 +1,6 @@
 .idea 
 mower2.iml 
+/target/
+.classpath
+.project
+.settings/

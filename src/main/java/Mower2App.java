@@ -7,7 +7,7 @@ public class Mower2App {
         System.out.println("My application");
 
         if (args == null || args.length != 1) {
-            System.out.println("Veuillez renseigner le fichier d'entrÃ©e");
+            System.out.println("Veuillez renseigner le fichier d'entrée");
         } else {
             String fileName = args[0];
 
@@ -16,7 +16,7 @@ public class Mower2App {
             try {
                 entrees = FileUtil.readFile(fileName);
             } catch (BusinessException e) {
-                e.printStackTrace();
+                System.out.println("Impossible de lire le fichier d'entrée");
                 return;
             }
 

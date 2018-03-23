@@ -3,19 +3,18 @@ package fr.mowitnow.mower2.model;
 public class Position {
     private Integer x;
     private Integer y;
-    private Character  orientation;
+
 
     /****** actions *******/
     @Override
     public String toString() {
-        return this.x + " " + this.y + " " + this.orientation;
+        return this.x + " " + this.y;
     }
 
     /****** Constructors ******/
-    public Position(Integer x, Integer y, Character  orientation) {
+    public Position(Integer x, Integer y) {
         this.x = x;
         this.y = y;
-        this.orientation = orientation;
     }
 
     /****** Getters and Setters ******/
@@ -35,11 +34,4 @@ public class Position {
         this.y = y;
     }
 
-    public Character  getOrientation() {
-        return orientation;
-    }
-
-    public void setOrientation(Character  orientation) {
-        this.orientation = orientation;
-    }
 }

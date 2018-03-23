@@ -9,15 +9,10 @@ import java.nio.file.Paths;
 import java.util.List;
 
 public class FileUtil {
-    public static String readFile(String fileName) throws BusinessException {
-        //read file into stream, try-with-resources
+    public static List<String> readFile(String fileName) throws BusinessException {
         try {
             List<String> lines = Files.readAllLines(Paths.get(fileName), StandardCharsets.UTF_8);
-            StringBuilder sb = new StringBuilder();
-            for(String line : lines){
-                sb.append(line);
-            }
-            return sb.toString();
+            return lines;
         } catch (IOException e) {
             throw new BusinessException("Impossible de lire le fichier d'entrée");
         }

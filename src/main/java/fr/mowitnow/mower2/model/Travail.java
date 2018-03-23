@@ -10,6 +10,7 @@ import java.util.List;
 public class Travail {
     private Gazon gazon; // Singleton => Il n'y a qu'un gazon par travail
     private List<Tondeuse> tondeuses;
+    public final boolean collisionDetection = false; // Si true, les tondeuses ne peuvent pas se superposer
 
     /****** Constructors ******/
     public Travail() {
@@ -21,6 +22,9 @@ public class Travail {
     public void lancer(List<String> entrees) {
         try {
             this.init(entrees);
+            this.roulerTondeuses();
+            System.out.println("Travail terminé avec succès");
+            this.printResult();
         } catch (BusinessException e) {
             System.out.print("Erreur: " + e.getMessage());
         }
@@ -32,7 +36,7 @@ public class Travail {
             throw new BusinessException("Le flux d'entrée est vide");
         }
         initGazon(entrees.get(0));
-        initTondeuses(entrees.subList(1, entrees.size()-1));
+        initTondeuses(entrees.subList(1, entrees.size()));
 
     }
 
@@ -81,13 +85,50 @@ public class Travail {
     }
 
     private void roulerTondeuses() throws BusinessException {
-        // TODO détection collision?
+        if (this.gazon == null || this.tondeuses == null || this.tondeuses.size() <= 0) {
+            return;
+        }
+
+        for (Tondeuse tondeuse : this.tondeuses) {
+            // verifier position actuelle de la tondeuse
+            if (isPositionLegalle(tondeuse.getPosition())) {
+                roulerTondeuse(tondeuse);
+            }
+        }
 
 
     }
 
-    private void printResult() throws BusinessException {
+    /**
+     * Vérifier si la position est dans le gazon
+     *
+     * @param position
+     * @return
+     */
+    private boolean isPositionLegalle(Position position) {
+        if (position == null || this.gazon == null || this.gazon.getPosition() == null) {
+            return false;
+        }
 
+        return position.getX() <= this.gazon.getPosition().getX() && position.getY() <= this.gazon.getPosition().getY();
+    }
+
+    private void roulerTondeuse(Tondeuse tondeuse) {
+        for (char action : tondeuse.getActions()) {
+            if (ActionEnum.A == action) {
+                Position prochainePosition = tondeuse.calculProchainePosition(action);
+                if (!isPositionLegalle(prochainePosition)) {
+                    continue;
+                }
+            }
+            tondeuse.bouger(action);
+        }
+    }
+
+    private void printResult() throws BusinessException {
+        for (Tondeuse tondeuse : this.tondeuses) {
+            tondeuse.printPosition();
+        }
     }
 
 

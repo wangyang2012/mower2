@@ -15,12 +15,67 @@ public class Tondeuse {
     }
 
     /****** actions *******/
-    public void moveNow(char action) {
+    public void bouger(char action) {
+        switch (action) {
+            case ActionEnum.D:
+                if (this.orientation.equals(OrientationEnum.E)) {
+                    this.orientation = OrientationEnum.S;
+                } else if (this.orientation.equals(OrientationEnum.N)) {
+                    this.orientation = OrientationEnum.E;
+                } else if (this.orientation.equals(OrientationEnum.S)) {
+                    this.orientation = OrientationEnum.W;
+                } else if (this.orientation.equals(OrientationEnum.W)) {
+                    this.orientation = OrientationEnum.N;
+                }
+                break;
+            case ActionEnum.G:
+                if (this.orientation.equals(OrientationEnum.E)) {
+                    this.orientation = OrientationEnum.N;
+                } else if (this.orientation.equals(OrientationEnum.N)) {
+                    this.orientation = OrientationEnum.W;
+                } else if (this.orientation.equals(OrientationEnum.S)) {
+                    this.orientation = OrientationEnum.E;
+                } else if (this.orientation.equals(OrientationEnum.W)) {
+                    this.orientation = OrientationEnum.S;
+                }
+                break;
+            case ActionEnum.A:
+                if (this.orientation.equals(OrientationEnum.E)) {
+                    this.position.setX(this.position.getX() + 1);
+                } else if (this.orientation.equals(OrientationEnum.N)) {
+                    this.position.setY(this.position.getY() + 1);
+                } else if (this.orientation.equals(OrientationEnum.S)) {
+                    this.position.setY(this.position.getY() - 1);
+                } else if (this.orientation.equals(OrientationEnum.W)) {
+                    this.position.setX(this.position.getX() - 1);
+                }
+                break;
+        }
     }
 
     public void printPosition() {
-        System.out.println("****** " + this.nom + " ******");
-        System.out.println(this.position.toString());
+        System.out.println(this.nom + ": " + this.position + " " + this.orientation);
+    }
+
+    public Position calculProchainePosition(char action) {
+
+        // Si tourner à gauche ou à droite, retourner la position actuelle
+        if (ActionEnum.A != action) {
+            return this.position;
+        }
+
+        Position newPosition = new Position(this.position);
+        switch (this.orientation) {
+            case OrientationEnum.E:
+                newPosition.setX(this.position.getX() + 1);
+            case OrientationEnum.N:
+                newPosition.setY(this.position.getY() + 1);
+            case OrientationEnum.S:
+                newPosition.setY(this.position.getY() - 1);
+            case OrientationEnum.W:
+                newPosition.setX(this.position.getX() - 1);
+        }
+        return newPosition;
     }
 
     /****** Getters and Setters ******/
@@ -56,4 +111,5 @@ public class Tondeuse {
     public void setActions(char[] actions) {
         this.actions = actions;
     }
+
 }

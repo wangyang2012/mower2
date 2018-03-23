@@ -1,14 +1,15 @@
 package fr.mowitnow.mower2.model;
 
-import fr.mowitnow.mower2.util.StringUtil;
+import org.apache.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
 
-// TODO: make in Singleton
-// TODO: utiliser Log4j
 public class Travail {
-    private Gazon gazon; // Singleton => Il n'y a qu'un gazon par travail
+
+    final static Logger logger = Logger.getLogger(Travail.class);
+
+    private Gazon gazon;
     private List<Tondeuse> tondeuses;
     public final boolean collisionDetection = false; // Si true, les tondeuses ne peuvent pas se superposer
 
@@ -23,21 +24,41 @@ public class Travail {
         try {
             this.init(entrees);
             this.roulerTondeuses();
-            System.out.println("Travail terminé avec succès");
+            logger.info("Travail est terminé avec succès");
             this.printResult();
         } catch (BusinessException e) {
-            System.out.print("Erreur: " + e.getMessage());
+            logger.error("Erreur: " + e.getMessage());
         }
-
     }
 
+    /**
+     * Création du gazon et des tondeuses
+     * @param entrees
+     * @throws BusinessException
+     */
     private void init(List<String> entrees) throws BusinessException {
+        logger.info("*************** Mower 2 ***************");
         if (entrees == null || entrees.isEmpty()) {
             throw new BusinessException("Le flux d'entrée est vide");
         }
         initGazon(entrees.get(0));
         initTondeuses(entrees.subList(1, entrees.size()));
+    }
 
+    /**
+     * Création du gazon
+     * @param line
+     * @throws BusinessException
+     */
+    private void initGazon(String line) throws BusinessException {
+        String[] coordinates = line.split(" ");
+        if (coordinates == null || coordinates.length != 2) {
+            throw new BusinessException("Le format de la ligne de gazon est erroné.");
+        }
+        Integer x = Integer.valueOf(coordinates[0]);
+        Integer y = Integer.valueOf(coordinates[1]);
+        this.gazon = new Gazon(x, y);
+        logger.info("Le gazon est correctement initialisé: " + gazon);
     }
 
     /**
@@ -66,41 +87,35 @@ public class Travail {
                 String ligneDeux = lignes.get(i + 1);
                 Tondeuse tondeuse = new Tondeuse("Tondeuse" + numberTondeuse, x, y, orientation, ligneDeux.toCharArray());
                 this.tondeuses.add(tondeuse);
+                logger.debug("Nouvelle tondeuse: " + tondeuse);
             } catch (Exception e) {
                 throw new BusinessException("Impossible de créer la tondeuse N°" + numberTondeuse);
             }
-            System.out.println("La tondeuse " + numberTondeuse + " est créée correctement");
+            logger.info("La tondeuse " + numberTondeuse + " est créée correctement");
         }
     }
 
-    private void initGazon(String line) throws BusinessException {
-        String[] coordinates = line.split(" ");
-        if (coordinates == null || coordinates.length != 2) {
-            throw new BusinessException("Le format de la ligne de gazon est erroné.");
-        }
-        Integer x = Integer.valueOf(coordinates[0]);
-        Integer y = Integer.valueOf(coordinates[1]);
-        this.gazon = new Gazon(x, y);
-        System.out.println("Le gazon est correctement initialisé: " + gazon);
-    }
-
+    /**
+     * Dérouler les actions de chaque tondeuse
+     * @throws BusinessException
+     */
     private void roulerTondeuses() throws BusinessException {
         if (this.gazon == null || this.tondeuses == null || this.tondeuses.size() <= 0) {
             return;
         }
 
         for (Tondeuse tondeuse : this.tondeuses) {
-            // verifier position actuelle de la tondeuse
+            // verifier position actuelle de la tondeuse par rapport au gazon
             if (isPositionLegalle(tondeuse.getPosition())) {
                 roulerTondeuse(tondeuse);
+            } else {
+                logger.debug("La tondeuse " + tondeuse.getNom() + " n'est pas dans le gazon!");
             }
         }
-
-
     }
 
     /**
-     * Vérifier si la position est dans le gazon
+     * Vérifier si la position en paramètre est dans le gazon
      *
      * @param position
      * @return
@@ -110,12 +125,31 @@ public class Travail {
             return false;
         }
 
+        // Détection de collision
+        if (collisionDetection) {
+            int countPosition = 0;
+            for (Tondeuse tondeuse : tondeuses) {
+                if (position.equals(tondeuse.getPosition())) {
+                    countPosition++;
+                    if (countPosition > 1) {
+                        return false;
+                    }
+                }
+            }
+        }
+
+        // Vérifier si la position ne dépasse pas le gazon
         return position.getX() <= this.gazon.getPosition().getX() && position.getY() <= this.gazon.getPosition().getY();
     }
 
+    /**
+     * Dérouler toutes les actions de la tondeuse
+     * @param tondeuse
+     */
     private void roulerTondeuse(Tondeuse tondeuse) {
         for (char action : tondeuse.getActions()) {
             if (ActionEnum.A == action) {
+                // Si l'action est avancer, vérifier que la tondeuse ne dépasse pas le gazon
                 Position prochainePosition = tondeuse.calculProchainePosition(action);
                 if (!isPositionLegalle(prochainePosition)) {
                     continue;
@@ -125,6 +159,10 @@ public class Travail {
         }
     }
 
+    /**
+     * Afficher le résultat
+     * @throws BusinessException
+     */
     private void printResult() throws BusinessException {
         for (Tondeuse tondeuse : this.tondeuses) {
             tondeuse.printPosition();

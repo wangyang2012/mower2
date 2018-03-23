@@ -1,6 +1,9 @@
 package fr.mowitnow.mower2.model;
 
+import org.apache.log4j.Logger;
+
 public class Tondeuse {
+    final static Logger logger = Logger.getLogger(Travail.class);
     private String nom;
     private Position position;
     private Character  orientation;
@@ -51,10 +54,16 @@ public class Tondeuse {
                 }
                 break;
         }
+        logger.debug(this);
     }
 
     public void printPosition() {
-        System.out.println(this.nom + ": " + this.position + " " + this.orientation);
+        logger.info(this);
+    }
+
+    @Override
+    public String toString() {
+        return this.nom + ": " + this.position + " " + this.orientation;
     }
 
     public Position calculProchainePosition(char action) {

@@ -1,19 +1,18 @@
 import fr.mowitnow.mower2.model.BusinessException;
 import fr.mowitnow.mower2.model.Travail;
 import fr.mowitnow.mower2.util.FileUtil;
+import org.apache.log4j.Logger;
 
 import java.util.List;
 
 
-// TODO: test
-// TODO: UML
-// TODO: Logs
 public class Mower2App {
-    public static void main(String[] args)  {
-        System.out.println("My application");
 
+    final static Logger logger = Logger.getLogger(Mower2App.class);
+
+    public static void main(String[] args)  {
         if (args == null || args.length != 1) {
-            System.out.println("Veuillez renseigner le fichier d'entrée");
+            logger.error("Veuillez renseigner le fichier d'entrée");
         } else {
             String fileName = args[0];
 
@@ -22,7 +21,7 @@ public class Mower2App {
             try {
                 entrees = FileUtil.readFile(fileName);
             } catch (BusinessException e) {
-                System.out.println("Impossible de lire le fichier d'entrée");
+                logger.error("Impossible de lire le fichier d'entrée");
                 return;
             }
 
@@ -32,6 +31,5 @@ public class Mower2App {
             // Déroulement
             travail.lancer(entrees);
         }
-
     }
 }

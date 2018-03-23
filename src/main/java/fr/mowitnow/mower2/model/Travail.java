@@ -7,11 +7,11 @@ import java.util.List;
 
 public class Travail {
 
-    final static Logger logger = Logger.getLogger(Travail.class);
+    public static final Logger logger = Logger.getLogger(Travail.class);
 
     private Gazon gazon;
     private List<Tondeuse> tondeuses;
-    public final boolean collisionDetection = false; // Si true, les tondeuses ne peuvent pas se superposer
+    public static final boolean COLLISION_DETECTION = false; // Si true, les tondeuses ne peuvent pas se superposer
 
     /****** Constructors ******/
     public Travail() {
@@ -99,8 +99,8 @@ public class Travail {
      * Dérouler les actions de chaque tondeuse
      * @throws BusinessException
      */
-    private void roulerTondeuses() throws BusinessException {
-        if (this.gazon == null || this.tondeuses == null || this.tondeuses.size() <= 0) {
+    private void roulerTondeuses() {
+        if (this.gazon == null || this.tondeuses == null || this.tondeuses.isEmpty()) {
             return;
         }
 
@@ -126,7 +126,7 @@ public class Travail {
         }
 
         // Détection de collision
-        if (collisionDetection) {
+        if (COLLISION_DETECTION) {
             int countPosition = 0;
             for (Tondeuse tondeuse : tondeuses) {
                 if (position.equals(tondeuse.getPosition())) {
@@ -163,7 +163,7 @@ public class Travail {
      * Afficher le résultat
      * @throws BusinessException
      */
-    private void printResult() throws BusinessException {
+    private void printResult() {
         for (Tondeuse tondeuse : this.tondeuses) {
             tondeuse.printPosition();
         }

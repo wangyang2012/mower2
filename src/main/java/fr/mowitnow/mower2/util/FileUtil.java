@@ -8,11 +8,10 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
 
-public class FileUtil {
-    public static List<String> readFile(String fileName) throws BusinessException {
+public interface FileUtil {
+    static List<String> readFile(String fileName) throws BusinessException {
         try {
-            List<String> lines = Files.readAllLines(Paths.get(fileName), StandardCharsets.UTF_8);
-            return lines;
+            return Files.readAllLines(Paths.get(fileName), StandardCharsets.UTF_8);
         } catch (IOException e) {
             throw new BusinessException("Impossible de lire le fichier d'entrée");
         }

@@ -3,7 +3,7 @@ package fr.mowitnow.mower2.model;
 import org.apache.log4j.Logger;
 
 public class Tondeuse {
-    final static Logger logger = Logger.getLogger(Travail.class);
+    public static final Logger logger = Logger.getLogger(Travail.class);
     private String nom;
     private Position position;
     private Character  orientation;
@@ -53,6 +53,8 @@ public class Tondeuse {
                     this.position.setX(this.position.getX() - 1);
                 }
                 break;
+            default:
+                logger.debug("Action inconnue: " + action);
         }
         logger.debug(this);
     }
@@ -77,12 +79,18 @@ public class Tondeuse {
         switch (this.orientation) {
             case OrientationEnum.E:
                 newPosition.setX(this.position.getX() + 1);
+                break;
             case OrientationEnum.N:
                 newPosition.setY(this.position.getY() + 1);
+                break;
             case OrientationEnum.S:
                 newPosition.setY(this.position.getY() - 1);
+                break;
             case OrientationEnum.W:
                 newPosition.setX(this.position.getX() - 1);
+                break;
+            default:
+                return newPosition;
         }
         return newPosition;
     }

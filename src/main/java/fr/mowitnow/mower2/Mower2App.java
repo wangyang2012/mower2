@@ -1,3 +1,5 @@
+package fr.mowitnow.mower2;
+
 import fr.mowitnow.mower2.model.BusinessException;
 import fr.mowitnow.mower2.model.Travail;
 import fr.mowitnow.mower2.util.FileUtil;
@@ -8,7 +10,7 @@ import java.util.List;
 
 public class Mower2App {
 
-    final static Logger logger = Logger.getLogger(Mower2App.class);
+    public static final Logger logger = Logger.getLogger(Mower2App.class);
 
     public static void main(String[] args)  {
         if (args == null || args.length != 1) {

@@ -21,17 +21,19 @@ public class Gazon {
         }
 
         if (ActionEnum.A == action) {
-            Position position = tondeuse.getPosition();
+            Position tondeusePosition = tondeuse.getPosition();
             Character  orientation = tondeuse.getOrientation();
             switch (orientation) {
                 case OrientationEnum.N:
-                    return position.getY() + 1 <= this.position.getY();
+                    return tondeusePosition.getY() + 1 <= this.position.getY();
                 case OrientationEnum.E:
-                    return position.getX() + 1 <= this.position.getX();
+                    return tondeusePosition.getX() + 1 <= this.position.getX();
                 case OrientationEnum.W:
-                    return position.getX() - 1 >= 0;
+                    return tondeusePosition.getX() - 1 >= 0;
                 case OrientationEnum.S:
-                    return position.getY() - 1 >= 0;
+                    return tondeusePosition.getY() - 1 >= 0;
+                default:
+                    return false;
             }
         }
         return true;

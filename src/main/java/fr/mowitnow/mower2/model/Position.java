@@ -52,14 +52,15 @@ public class Position {
         }
 
         if (y == null) {
-            if (o.getY() != null) {
-                return false;
-            } else {
-                return true;
-            }
+            return o.getY() == null;
         } else {
             return y.equals(o.getY());
         }
+    }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode();
     }
 
     /****** Getters and Setters ******/
